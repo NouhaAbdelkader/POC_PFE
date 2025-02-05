@@ -10,5 +10,4 @@ public class PocPfeApplication {
     public static void main(String[] args) {
         SpringApplication.run(PocPfeApplication.class, args);
     }
-
 }
