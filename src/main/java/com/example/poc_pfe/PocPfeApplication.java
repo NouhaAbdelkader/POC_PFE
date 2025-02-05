@@ -12,6 +12,31 @@ public class PocPfeApplication {
 
     public static void main(String[] args) {
 
+
+
+// **************************** unboxing  ***********************
+
+
+        Integer i = Integer.valueOf(-8);
+
+        // 1. Unboxing through method invocation
+        int absVal = absoluteValue(i);
+        System.out.println("absolute value of " + i + " = " + absVal);
+
+        List<Double> doubles = new ArrayList<>();
+        doubles.add(3.1416);    // Π is autoboxed through method invocation.
+
+        // 2. Unboxing through assignment
+        double pi = doubles.get(0);
+        System.out.println("pi = " + pi);
+    }
+
+    public static int absoluteValue(int i) {
+        return (i < 0) ? -i : i;
+
+
+
+
 //*************************Switch *********************************
 
         int month = 8;
@@ -99,7 +124,6 @@ public class PocPfeApplication {
 
     String[] copyFrom = { "Affogato", "Americano", "Cappuccino", "Corretto", "Cortado", "Doppio", "Espresso" };
     String[] copyTo = java.util.Arrays.copyOfRange(copyFrom, 2, 9);
-
 
 
 
