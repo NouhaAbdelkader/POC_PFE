@@ -6,10 +6,13 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.counting;
@@ -20,7 +23,7 @@ public class StreamDemo {
     public static void main(String[] args) {
 
         // **************** 1  ***********************
-        List<String> strings = List.of("one","two","three","four");
+        List<String> strings = List.of("one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten");
         var map = strings.stream()
                 .collect(groupingBy(String::length, counting()));
         map.forEach((key, value) -> System.out.println(key + " :: " + value));
@@ -145,6 +148,7 @@ public class StreamDemo {
         System.out.println("result = " + r);
 
 
+
         /// un exemple qui compte le nombre d'avertissements dans un fichier journal
         Path log = Path.of("/tmp/debug.log"); // adjust to fit your installation
         try (Stream<String> lines = Files.lines(log)) {
@@ -157,6 +161,7 @@ public class StreamDemo {
         } catch (IOException e) {
             // do something with the exception
         }
+
 
 
         //// sum() *********************
@@ -187,6 +192,8 @@ public class StreamDemo {
 
 
 
+
+
         // ******************** reduce() *********************
         System.out.println(" ******************** reduce() *********************\n" );
 
@@ -200,6 +207,11 @@ public class StreamDemo {
         System.out.println("sum = " + rst);
 
 
+
+
+
+
+
  // *************************Comptage des éléments traités par un flux***********************
 
         Collection<String> stss =
@@ -211,6 +223,9 @@ public class StreamDemo {
                         .count();
         System.out.println("count = " + count);
 
+
+
+
 ////// ******* Consommer chaque élément un par un **************
 
         Stream<String> sas = Stream.of("one", "two", "three", "four");
@@ -220,5 +235,98 @@ public class StreamDemo {
                 .forEach(System.out::println);
 
 
+
+
+
+
+        // nous avons deux modèles pour stocker les éléments d'un flux dans une liste :
+
+        /// *****************  1 liste modifiable  *******************
+
+        Stream<String> s1 = Stream.of("one", "two", "three", "four");
+
+        List<String> r1 =
+                s1.filter(S -> S.length() == 3)
+                        .map(String::toUpperCase)
+                        .collect(Collectors.toList());
+
+
+
+
+
+        /// *****************  2 liste non modifiable *******************
+
+        Stream<String> S2 = Stream.of("one", "two", "three", "four");
+
+        List<String> r2 =
+                S2.filter( S3 -> S3.length() == 3)
+                        .map(String::toUpperCase)
+                        .toList();
+
+
+
+
+
+
+        ///////////////   allmatch() , anymatch() , nonematch()   //////////
+
+        System.out.println("******  allmatch() , anymatch() , nonematch() *******");
+
+        boolean noBlank  =
+                strings.stream()
+                        .allMatch(Predicate.not(String::isBlank));
+        boolean oneGT3   =
+                strings.stream()
+                        .anyMatch(q -> q.length() == 3);
+        boolean allLT10  =
+                strings.stream()
+                        .noneMatch(q -> q.length() > 10);
+
+        System.out.println("noBlank = " + noBlank);
+        System.out.println("oneGT3  = " + oneGT3);
+        System.out.println("allLT10 = " + allLT10);
+
+
+
+
+
+        ///////// ******  groupingBy()  dans cet exemple on groupe les mots par longueur  *******
+
+        System.out.println(" *******  groupingBy() ******* " );
+
+
+        Map<Integer, List<String>> map1 =
+                strings.stream()
+                        .collect(Collectors.groupingBy(String::length));
+
+        map1.forEach((key, value) -> System.out.println(key + " :: " + value));
+
+
+
+
+
+
+        ///////// ******  groupingBy()  dans cet exemple on groupe les nb de mts qui ont mm longueur   *******
+
+
+        System.out.println(" *******  groupingBy() and counting() ******* " );
+
+        Map<Integer, Long> map2 =
+                strings.stream()
+                        .collect(
+                                Collectors.groupingBy(
+                                        String::length,
+                                        Collectors.counting()));
+
+        map2.forEach((key, value) -> System.out.println(key + " :: " + value));
+
+        /// Parallelizing Streams
+
+        int parallelSum =
+                IntStream.range(0, 10)
+                      //  .limit(5)
+                        .parallel()
+                        .sum();
+        System.out.println("valeur de inStream " + parallelSum);
     }
     }
