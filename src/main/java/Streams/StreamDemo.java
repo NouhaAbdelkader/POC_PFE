@@ -328,5 +328,23 @@ public class StreamDemo {
                         .parallel()
                         .sum();
         System.out.println("valeur de inStream " + parallelSum);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
     }
