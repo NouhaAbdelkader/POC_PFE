@@ -4,15 +4,21 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.*;
+import java.util.Set;
 
 
 public class ModernPathExample {
 
     public static void main(String[] args) throws IOException {
         Path path = Paths.get("example.txt");
-        /////////////********* Attributs de fichier de base *************/////////////
-        System.out.println("/////////////********* Attributs de fichier de base *************/////////////\n" );
+
+        /**
+         * Attributs de fichier de base
+         **/
+
+
+        System.out.println("********* Attributs de fichier de base *************\n" );
 
         BasicFileAttributes attr = Files.readAttributes(path, BasicFileAttributes.class);
 
@@ -24,10 +30,31 @@ public class ModernPathExample {
         System.out.println("isOther: " + attr.isOther());
         System.out.println("isRegularFile: " + attr.isRegularFile());
         System.out.println("isSymbolicLink: " + attr.isSymbolicLink());
-        System.out.println("size: " + attr.size());
+        // les deux maniéres
+        System.out.println("Taille du fichier : : " + attr.size());
+        System.out.println("Taille du fichier : " + Files.size(path) + " octets");
+        System.out.println("Le fichier est caché ?"+ Files.isHidden(path) );
+        System.out.println("Dernière modification : " + attr.lastModifiedTime());
+        System.out.println("Propriétaire actuel : " + Files.getOwner(path));
+
+
+/**
+ * Autorisations de fichiers POSIX
+ */
+        try {
+            DosFileAttributes arr =
+                    Files.readAttributes(path, DosFileAttributes.class);
+            System.out.println("isReadOnly is " + arr.isReadOnly());
+            System.out.println("isHidden is " + arr.isHidden());
+            System.out.println("isArchive is " + arr.isArchive());
+            System.out.println("isSystem is " + arr.isSystem());
+        } catch (UnsupportedOperationException x) {
+            System.err.println("DOS file" +
+                    " attributes not supported:" + x);
+        }
 
         // Vérifier si le fichier existe
-        System.out.println("// Vérifier si le fichier existe\n" );
+        System.out.println("Vérifier si le fichier existe\n" );
 
         if (Files.exists(path)) {
         } else {
@@ -47,7 +74,9 @@ public class ModernPathExample {
         System.out.println("Est un fichier : " + Files.isRegularFile(path));
         System.out.println("Est un répertoire : " + Files.isDirectory(path));
 
-        /////////////////////   Création de chemins   //////////////
+        /** Création de chemins   **/
+
+
         System.out.println(" // Création de chemins\n" );
 
         Path p1 = Paths.get("/tmp/foo");
@@ -155,7 +184,9 @@ public class ModernPathExample {
             System.err.println("Erreur lors de la manipulation du fichier : " + e.getMessage());
         }
 
-          //// **********  Liens, symboliques et autres ****************
+          /**
+           ***  Liens, symboliques et autres **********
+           **/
 
 
 
@@ -248,4 +279,9 @@ public class ModernPathExample {
             System.err.println("Erreur lors de la lecture du lien symbolique : " + e.getMessage());
         }
     }
+
+
+
+
+
 }
